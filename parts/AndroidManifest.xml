@@ -5,10 +5,6 @@
     android:versionName="3.0"
     android:sharedUserId="android.uid.system">
 
-    <uses-sdk
-        android:minSdkVersion="24"
-        android:targetSdkVersion="30" />
-
     <uses-permission android:name="android.permission.DEVICE_POWER" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
