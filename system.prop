@@ -121,8 +121,11 @@ persist.device_config.mglru_native.lru_gen_config=all
 # Notch Overlay
 ro.miui.notch=1
 
+# Disable Skia tracing by default
+debug.hwui.skia_atrace_enabled=false
+
 # Battery Property
-ro.charger.enable_suspend = 1
+ro.charger.enable_suspend=1
 
 # Disable MTE Async for system server
 arm64.memtag.process.system_server=off
