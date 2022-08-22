@@ -1,4 +1,5 @@
 allow hal_wifi_default persist_vendor_debug_wifi_prop:file { read };
+allow hal_wifi_default vendor_tombstone_data_file:dir { search };
 
 get_prop(hal_wifi_default, persist_vendor_debug_wifi_prop)
 
