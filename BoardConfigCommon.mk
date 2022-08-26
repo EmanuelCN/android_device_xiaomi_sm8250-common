@@ -171,7 +171,7 @@ $(foreach p, $(call to-upper, $(ALL_PARTITIONS)), \
     $(eval TARGET_COPY_OUT_$(p) := $(call to-lower, $(p))))
 
 # EROFS
-BOARD_EROFS_COMPRESSOR := lz4hc,9
+BOARD_EROFS_COMPRESSOR := lz4
 BOARD_EROFS_PCLUSTER_SIZE := 65536
 
 # Partitions - dynamic
