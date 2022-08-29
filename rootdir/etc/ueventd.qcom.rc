@@ -515,3 +515,6 @@ subsystem mem_buf_vm
 
 # devcoredump data attributes
 /sys/class/devcoredump/devcd*                           data                            0600    system  system
+
+# HBM
+/sys/class/drm/card0/card0-DSI-1                        disp_param                      0666    system  system
