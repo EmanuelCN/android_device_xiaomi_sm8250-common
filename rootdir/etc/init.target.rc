@@ -29,6 +29,8 @@
 
 on early-init
     write /proc/sys/kernel/sched_boost 1
+    write /sys/class/drm/card0/card0-DSI-1/thermal_hbm_disabled 0
+    chmod 0444 /sys/class/drm/card0/card0-DSI-1/thermal_hbm_disabled
 
 on init
     write /dev/stune/foreground/schedtune.sched_boost_no_override 1
