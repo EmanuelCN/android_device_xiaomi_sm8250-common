@@ -17,3 +17,6 @@ allow init vendor_sysfs_graphics:file rw_file_perms;
 # Allow ioctl to zram_swap for performance
 allow init per_boot_file:file ioctl;
 allowxperm init per_boot_file:file ioctl { F2FS_IOC_SET_PIN_FILE };
+
+# Allow Vendor_init set Radio Prop
+set_prop(vendor_init, vendor_radio_prop)
