@@ -20,6 +20,7 @@ persist.vendor.cne.feature=1
 # Display
 debug.gralloc.gfx_ubwc_disable=0
 debug.sf.enable_hwc_vds=0
+debug.sf.auto_latch_unsignaled=true
 persist.vendor.color.matrix=2
 debug.hwui.use_hint_manager=true
 debug.hwui.target_cpu_time_percent=20
