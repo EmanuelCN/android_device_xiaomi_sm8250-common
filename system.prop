@@ -56,7 +56,7 @@ dalvik.vm.dex2oat64.enabled=true
 # Display
 debug.gralloc.gfx_ubwc_disable=0
 debug.sf.enable_hwc_vds=1
-debug.sf.latch_unsignaled=0
+debug.sf.auto_latch_unsignaled=true
 persist.vendor.color.matrix=2
 persist.demo.hdmirotationlock=false
 
