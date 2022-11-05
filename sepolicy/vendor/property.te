@@ -9,3 +9,5 @@ vendor_internal_prop(vendor_fod_prop);
 vendor_internal_prop(vendor_sno_prop);
 
 vendor_internal_prop(vendor_motor_prop);
+
+vendor_restricted_prop(vendor_aware_available_prop);
