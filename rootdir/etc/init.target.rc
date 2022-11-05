@@ -48,6 +48,8 @@ on init
     #change owner of white led
     chown system system /sys/class/leds/white/brightness
     chown system system /sys/class/leds/white/breath
+    write /dev/sys/fs/by-name/userdata/data_io_flag 56
+    write /dev/sys/fs/by-name/userdata/node_io_flag 56
 
 on early-fs
     start vold
@@ -270,10 +272,15 @@ service vendor.lowi /vendor/bin/sscrpcd
    disabled
 
 on property:sys.boot_completed=1
+
     # Enable ZRAM on boot_complete
     rm /data/unencrypted/zram_swap
     swapon_all /vendor/etc/fstab.qcom
     write /proc/sys/vm/swappiness 100
+
+    # Runtime fs tuning
+    write /dev/sys/fs/by-name/userdata/data_io_flag 8
+    write /dev/sys/fs/by-name/userdata/node_io_flag 8
 
 #pd-mapper
 service vendor.pd_mapper /vendor/bin/pd-mapper
