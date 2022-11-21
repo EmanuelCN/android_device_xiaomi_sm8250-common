@@ -26,7 +26,7 @@ import android.util.Log;
 import org.lineageos.settings.doze.DozeUtils;
 import org.lineageos.settings.thermal.ThermalUtils;
 import org.lineageos.settings.refreshrate.RefreshUtils;
-
+import org.lineageos.settings.utils.FileUtils;
 public class BootCompletedReceiver extends BroadcastReceiver {
 
     private static final boolean DEBUG = false;
@@ -37,6 +37,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         if (DEBUG) Log.d(TAG, "Received boot completed intent");
         DozeUtils.checkDozeService(context);
         ThermalUtils.startService(context);
-        RefreshUtils.startService(context);        
+        RefreshUtils.startService(context);
+        FileUtils.enableService(context);
     }
 }
