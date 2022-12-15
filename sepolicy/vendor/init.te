@@ -20,3 +20,5 @@ allowxperm init per_boot_file:file ioctl { F2FS_IOC_SET_PIN_FILE };
 
 # Allow Vendor_init set Radio Prop
 set_prop(vendor_init, vendor_radio_prop)
+
+allow init vendor_configs_file:file { mounton };

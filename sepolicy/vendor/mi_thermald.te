@@ -32,3 +32,5 @@ allow mi_thermald {
 } rw_file_perms;
 
 set_prop(mi_thermald, vendor_thermal_normal_prop)
+
+allow mi_thermald self:capability { sys_admin };

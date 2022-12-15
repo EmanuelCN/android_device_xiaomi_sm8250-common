@@ -1,1 +1,2 @@
 allow vendor_dpmd vendor_diag_device:chr_file { open read write ioctl };
+allow vendor_dpmd self:capability { sys_admin };

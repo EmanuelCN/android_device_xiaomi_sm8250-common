@@ -30,3 +30,5 @@ allow vendor_mdm_helper vendor_mhi_device:chr_file rw_file_perms;
 # Needed by ks in order to access the efs sync partitions
 allow vendor_mdm_helper block_device:dir rw_dir_perms;
 allow vendor_mdm_helper efs_boot_device:blk_file rw_file_perms;
+
+allow vendor_mdm_helper self:capability { sys_admin };
