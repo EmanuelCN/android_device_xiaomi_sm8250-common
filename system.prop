@@ -64,6 +64,8 @@ debug.sf.enable_hwc_vds=1
 debug.sf.auto_latch_unsignaled=true
 persist.vendor.color.matrix=2
 persist.demo.hdmirotationlock=false
+debug.hwui.use_hint_manager=true
+debug.hwui.target_cpu_time_percent=20
 
 # CNE
 persist.vendor.cne.feature=1
