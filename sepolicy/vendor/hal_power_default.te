@@ -51,3 +51,5 @@ allow hal_power_default self:capability sys_nice;
 # To get/set powerhal state property
 set_prop(hal_power_default, vendor_power_prop)
 allow hal_power_default proc:file { open read write create };
+
+binder_call(system_app, hal_power_default)
