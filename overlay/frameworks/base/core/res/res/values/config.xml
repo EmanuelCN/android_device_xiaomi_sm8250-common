@@ -237,7 +237,6 @@
         <item>"/vendor/lib/libkernelmanager.so"</item>
         <item>"/vendor/lib/libllvm-glnext.so"</item>
         <item>"/vendor/lib/libllvm-qcom.so"</item>
-        <item>"/vendor/lib/libllvm-qgl.so"</item>
         <item>"/vendor/lib64/egl/eglSubDriverAndroid.so"</item>
         <item>"/vendor/lib64/egl/libEGL_adreno.so"</item>
         <item>"/vendor/lib64/egl/libGLESv1_CM_adreno.so"</item>
@@ -253,7 +252,6 @@
         <item>"/vendor/lib64/libkernelmanager.so"</item>
         <item>"/vendor/lib64/libllvm-glnext.so"</item>
         <item>"/vendor/lib64/libllvm-qcom.so"</item>
-        <item>"/vendor/lib64/libllvm-qgl.so"</item>
         <item>"/system/bin/surfaceflinger"</item>
         <item>"/system/framework/framework.jar"</item>
         <item>"/system/framework/services.jar"</item>
