@@ -1,1 +1,9 @@
+typeattribute hal_graphics_composer_default mlstrustedsubject;
+
+binder_call(hal_graphics_composer_default, hal_power_service);
+binder_call(hal_graphics_composer_default, hal_power_default);
+
 allow hal_graphics_composer_default vendor_diag_device:chr_file { open read write ioctl };
+
+# allow composer client to find display config service.
+allow hal_graphics_composer_default hal_power_service:service_manager find;
