@@ -44,24 +44,6 @@ on property:sys.boot_completed=1
     write /proc/sys/vm/dirty_expire_centisecs 3000
     write /proc/sys/vm/dirty_background_ratio 10
 
-    # Setup runtime cpusets
-    write /dev/cpuset/top-app/cpus 0-7
-    write /dev/cpuset/foreground/cpus 0-3,5-6
-    write /dev/cpuset/background/cpus 0-1
-    write /dev/cpuset/system-background/cpus 0-3
-    write /dev/cpuset/restricted/cpus 0-3
-
-    # Setup runtime schedTune
-    write /dev/stune/foreground/schedtune.prefer_idle 1
-    write /dev/stune/foreground/schedtune.prefer_high_cap 0
-    write /dev/stune/foreground/schedtune.boost 0
-    write /dev/stune/schedtune.prefer_idle 0
-    write /dev/stune/schedtune.prefer_high_cap 0
-    write /dev/stune/schedtune.boost 0
-    write /dev/stune/top-app/schedtune.prefer_idle 1
-    write /dev/stune/top-app/schedtune.prefer_high_cap 0
-    write /dev/stune/top-app/schedtune.boost 10
-
     # Setup runtime blkio
     # value for group_idle is us
     write /dev/blkio/blkio.weight 1000
@@ -90,27 +72,8 @@ on early-init
 
 on init
     # Setup permission for Power HAL
-    chown system system /dev/stune/top-app/schedtune.boost
     chown system system /dev/cpu_dma_latency
-
-    chmod 0664 /dev/stune/top-app/schedtune.boost
     chmod 0664 /dev/cpu_dma_latency
-
-    # Boot time cpuset and stune
-    write /dev/cpuset/top-app/cpus 0-7
-    write /dev/cpuset/foreground/cpus 0-7
-    write /dev/cpuset/background/cpus 0-5
-    write /dev/cpuset/system-background/cpus 0-5
-    write /dev/cpuset/restricted/cpus 2-5
-    write /dev/stune/foreground/schedtune.prefer_idle 1
-    write /dev/stune/foreground/schedtune.prefer_high_cap 1
-    write /dev/stune/foreground/schedtune.boost 100
-    write /dev/stune/schedtune.prefer_idle 1
-    write /dev/stune/schedtune.prefer_high_cap 1
-    write /dev/stune/schedtune.boost 100
-    write /dev/stune/top-app/schedtune.prefer_idle 1
-    write /dev/stune/top-app/schedtune.prefer_high_cap 1
-    write /dev/stune/top-app/schedtune.boost 100
 
     # Boot time fs tuning
     write /sys/block/sda/queue/iostats 0
@@ -141,18 +104,61 @@ on init
     chown system system /dev/cpuset/camera-daemon-dedicated/tasks
     chmod 0664 /dev/cpuset/camera-daemon-dedicated/tasks
 
-    # create an stune group for camera-specific processes
-    mkdir /dev/stune/camera-daemon
-    write /dev/stune/camera-daemon/schedtune.prefer_idle 1
-    write /dev/stune/camera-daemon/schedtune.boost 0
-    chown system system /dev/stune/camera-daemon
-    chown system system /dev/stune/camera-daemon/tasks
-    chmod 0664 /dev/stune/camera-daemon/tasks
-
-    # set default schedTune value for camera-daemon
-    write /dev/stune/camera-daemon/schedtune.prefer_idle 1
-    write /dev/stune/camera-daemon/schedtune.boost 0
-
     # report max frequency to unity tasks.
     write /proc/sys/kernel/sched_lib_name "com.miHoYo.,UnityMain,libunity.so"
     write /proc/sys/kernel/sched_lib_mask_force 255
+
+    # Setup uclamp
+
+    # camera-daemon
+    write /dev/cpuctl/camera-daemon/cpu.uclamp.min 20
+    write /dev/cpuctl/camera-daemon/cpu.uclamp.max max
+    write /dev/cpuctl/camera-daemon/uclamp.boosted 1
+    write /dev/cpuctl/camera-daemon/cpu.uclamp.latency_sensitive 1
+
+    # top-app
+    write /dev/cpuctl/top-app/uclamp.max max
+    write /dev/cpuctl/top-app/uclamp.min 30
+    write /dev/cpuctl/top-app/uclamp.boosted 1
+    write /dev/cpuctl/top-app/uclamp.latency_sensitive 1
+
+    # foreground
+    write /dev/cpuctl/foreground/uclamp.max 10
+    write /dev/cpuctl/foreground/uclamp.min 0
+    write /dev/cpuctl/foreground/uclamp.boosted 0
+    write /dev/cpuctl/foreground/uclamp.latency_sensitive 1
+
+    # background
+    write /dev/cpuctl/background/uclamp.max 50
+    write /dev/cpuctl/background/uclamp.min 0
+    write /dev/cpuctl/background/uclamp.boosted 0
+    write /dev/cpuctl/background/uclamp.latency_sensitive 0
+
+    # system-background
+    write /dev/cpuctl/system-background/uclamp.max 40
+    write /dev/cpuctl/system-background/uclamp.min 0
+    write /dev/cpuctl/system-background/uclamp.boosted 0
+    write /dev/cpuctl/system-background/uclamp.latency_sensitive 0
+    
+    # RT
+    write /dev/cpuctl/rt/uclamp.max 20
+    write /dev/cpuctl/rt/uclamp.min 0
+    write /dev/cpuctl/rt/uclamp.boosted 0
+    write /dev/cpuctl/rt/uclamp.latency_sensitive 0
+
+    # RT tuning
+    write /proc/sys/kernel/sched_rt_period_us 1000000
+    write /proc/sys/kernel/sched_rt_runtime_us 1000000
+    write /proc/sys/kernel/sched_rr_timeslice_ms 1
+    write /proc/sys/kernel/sched_util_clamp_min_rt_default 128
+
+    # Setup cpu.shares to throttle background groups (bg ~ 5% sysbg ~ 10%)
+    write /dev/cpuctl/background/cpu.shares 1024
+    write /dev/cpuctl/system-background/cpu.shares 2048
+    write /dev/cpuctl/system/cpu.shares 20480
+    # We only have system and background groups holding tasks and the groups below are empty
+    write /dev/cpuctl/camera-daemon/cpu.shares 20480
+    write /dev/cpuctl/foreground/cpu.shares 20480
+    write /dev/cpuctl/nnapi-hal/cpu.shares 20480
+    write /dev/cpuctl/rt/cpu.shares 20480
+    write /dev/cpuctl/top-app/cpu.shares 20480
