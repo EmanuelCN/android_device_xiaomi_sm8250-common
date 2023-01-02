@@ -392,4 +392,8 @@
          Off by default, since the framebuffer readback used to implement the
          fading edges is prohibitively expensive on most GPUs. -->
     <bool name="config_ui_enableFadingMarquee">true</bool>
+
+    <!-- Delay that allows some content to arrive at the display before switching
+         from DOZE to ON, in millis. -->
+    <integer name="config_wakeUpDelayDoze">32</integer>
 </resources>
