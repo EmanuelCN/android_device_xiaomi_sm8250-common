@@ -7,6 +7,8 @@ get_prop(vendor_mdm_helper, vendor_ssr_prop)
 
 # Allow MDM helper to create vendor_tombstone_data_file
 allow vendor_mdm_helper vendor_tombstone_data_file:fifo_file create_file_perms;
+allow vendor_mdm_helper vendor_tombstone_data_file:fifo_file rw_file_perms;
+allow vendor_mdm_helper vendor_tombstone_data_file:file rw_file_perms;
 
 # Allow MDM helper r/w to MSADP partition
 allow vendor_mdm_helper vendor_efs_boot_dev:blk_file rw_file_perms;
@@ -32,3 +34,9 @@ allow vendor_mdm_helper ks_exec:file execute_no_trans;
 allow vendor_mdm_helper block_device:dir rw_dir_perms;
 allow vendor_mdm_helper efs_boot_device:blk_file rw_file_perms;
 allow vendor_mdm_helper vendor_efs_boot_dev:blk_file rw_file_perms;
+
+# Allow mdmhelper (kickstart) to use SDX55M tombstones
+allow vendor_mdm_helper mdm_tombstone_data_file:dir create_dir_perms;
+allow vendor_mdm_helper mdm_tombstone_data_file:dir rw_dir_perms;
+allow vendor_mdm_helper mdm_tombstone_data_file:file create_file_perms;
+allow vendor_mdm_helper mdm_tombstone_data_file:file rw_file_perms;
