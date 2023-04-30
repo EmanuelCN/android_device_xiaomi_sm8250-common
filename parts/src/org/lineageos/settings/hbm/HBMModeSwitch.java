@@ -25,6 +25,7 @@ import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceManager;
 
 import org.lineageos.settings.utils.FileUtils;
+import org.lineageos.settings.display.*;
 
 public class HBMModeSwitch implements OnPreferenceChangeListener {
     private static final String HBM = "/sys/class/drm/card0/card0-DSI-1/disp_param";
@@ -52,6 +53,10 @@ public class HBMModeSwitch implements OnPreferenceChangeListener {
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         Boolean enabled = (Boolean) newValue;
+        boolean dcDimmingEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(DcDimmingTileService.DC_DIMMING_ENABLE_KEY, false);
+    	if (dcDimmingEnabled) {
+            return false;
+        }
         FileUtils.writeLine(getHBM(), enabled ? "0x10000" : "0xF0000");
         if (enabled) {
             FileUtils.writeLine(getBACKLIGHT(), "2047");

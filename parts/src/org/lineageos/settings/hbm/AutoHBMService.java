@@ -17,6 +17,8 @@ import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 
 import org.lineageos.settings.utils.FileUtils;
+import org.lineageos.settings.display.*;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -32,6 +34,7 @@ public class AutoHBMService extends Service {
     Sensor mLightSensor;
 
     private SharedPreferences mSharedPrefs;
+    private boolean dcDimmingEnabled;
 
     public void activateLightSensorRead() {
         submit(() -> {
@@ -76,7 +79,7 @@ public class AutoHBMService extends Service {
             long timeToDisableHBM = Long.parseLong(mSharedPrefs.getString(HBMFragment.KEY_HBM_DISABLE_TIME, "1"));
 
             if (lux > luxThreshold) {
-                if ((!mAutoHBMActive || !isCurrentlyEnabled()) && !keyguardShowing) {
+                if ((!mAutoHBMActive || !isCurrentlyEnabled()) && !keyguardShowing && !dcDimmingEnabled) {
                     mAutoHBMActive = true;
                     enableHBM(true);
                     mLastTriggerTime = System.currentTimeMillis();

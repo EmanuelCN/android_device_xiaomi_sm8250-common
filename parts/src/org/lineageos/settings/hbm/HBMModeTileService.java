@@ -30,6 +30,7 @@ import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 
 import org.lineageos.settings.utils.FileUtils;
+import org.lineageos.settings.display.*;
 
 public class HBMModeTileService extends TileService {
 
@@ -79,17 +80,19 @@ public class HBMModeTileService extends TileService {
     public void onStopListening() {
         super.onStopListening();
     }
-
     @Override
     public void onClick() {
         super.onClick();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final boolean dcDimmingEnabled = sharedPrefs.getBoolean(DcDimmingTileService.DC_DIMMING_ENABLE_KEY, false);
+        if (dcDimmingEnabled) {
+            return;
+        }
         final boolean enabled = !(sharedPrefs.getBoolean(HBM_KEY, false));
         FileUtils.writeLine(HBM, enabled ? "0x10000" : "0xF0000");
         if (enabled) {
             FileUtils.writeLine(BACKLIGHT, "2047");
             Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 255);
-
         }
         sharedPrefs.edit().putBoolean(HBM_KEY, enabled).commit();
         updateUI(enabled);
