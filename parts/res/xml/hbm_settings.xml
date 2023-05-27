@@ -36,6 +36,11 @@
             android:title="@string/auto_hbm_threshold_title"
             android:summary="@string/auto_hbm_threshold_summary" />
 
+        <org.lineageos.settings.hbm.AutoHBMTimePreference
+            android:key="hbm_disable_time"
+            android:title="@string/hbm_disable_time_title"
+            android:summary="@string/hbm_disable_time_summary" />
+
         <Preference
             android:icon="@drawable/ic_info_outline"
             android:summary="@string/hbm_mode_warning" 

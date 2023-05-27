@@ -63,34 +63,31 @@ public class AutoHBMService extends Service {
         return FileUtils.getFileValueAsBoolean(HBM, false);
     }
 
-    private static final int DELAY_MILLIS = 7000; // 7 seconds
-
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
+        private long mLastTriggerTime = 0;
+
         @Override
         public void onSensorChanged(SensorEvent event) {
             float lux = event.values[0];
             KeyguardManager km =
                 (KeyguardManager) getSystemService(getApplicationContext().KEYGUARD_SERVICE);
             boolean keyguardShowing = km.inKeyguardRestrictedInputMode();
-            float threshold = Float.parseFloat(mSharedPrefs.getString(HBMFragment.KEY_AUTO_HBM_THRESHOLD, "20000"));
-            if (lux > threshold) {
-                if ((!mAutoHBMActive | !isCurrentlyEnabled()) && !keyguardShowing) {
+            float luxThreshold = Float.parseFloat(mSharedPrefs.getString(HBMFragment.KEY_AUTO_HBM_THRESHOLD, "20000"));
+            long timeToDisableHBM = Long.parseLong(mSharedPrefs.getString(HBMFragment.KEY_HBM_DISABLE_TIME, "1"));
+
+            if (lux > luxThreshold) {
+                if ((!mAutoHBMActive || !isCurrentlyEnabled()) && !keyguardShowing) {
                     mAutoHBMActive = true;
                     enableHBM(true);
+                    mLastTriggerTime = System.currentTimeMillis();
                 }
-            }
-            if (lux < threshold) {
+            } else {
                 if (mAutoHBMActive) {
-                    mAutoHBMActive = false;
-                    mExecutorService.submit(() -> {
-                        try {
-                            Thread.sleep(DELAY_MILLIS);
-                        } catch (InterruptedException e) {
-                        }
-                        if (lux < threshold) {
-                            enableHBM(false);
-                        }
-                    });
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - mLastTriggerTime >= timeToDisableHBM * 1000) {
+                        mAutoHBMActive = false;
+                        enableHBM(false);
+                    }
                 }
             }
         }
