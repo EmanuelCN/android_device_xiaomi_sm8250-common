@@ -18,7 +18,7 @@ import androidx.preference.PreferenceViewHolder;
 public class AutoHBMTimePreference extends CustomSeekBarPreference {
 
     private static int mMinVal = 1;
-    private static int mMaxVal = 10;
+    private static int mMaxVal = 120;
     private static int mDefVal = 1;
 
     public AutoHBMTimePreference(Context context, AttributeSet attrs) {
