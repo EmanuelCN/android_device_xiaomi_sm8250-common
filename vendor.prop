@@ -145,6 +145,9 @@ ro.soc.model=SM8250
 ro.crypto.allow_encrypt_override=true
 ro.crypto.volume.filenames_mode=aes-256-cts
 
+# Camera
+persist.vendor.camera.perflock.enable=0
+
 # Display
 persist.sys.sf.color_mode=9
 persist.sys.sf.color_saturation=1.0
