@@ -191,11 +191,6 @@ PRODUCT_PACKAGES += \
     vendor.qti.hardware.display.allocator-service
 
 PRODUCT_PACKAGES += \
-    android.hardware.memtrack@1.0-impl \
-    android.hardware.memtrack@1.0-service \
-    memtrack.kona
-
-PRODUCT_PACKAGES += \
     libdisplayconfig.qti \
     libdisplayconfig.system.qti \
     libqdMetaData \
@@ -213,6 +208,8 @@ PRODUCT_PACKAGES += \
     vendor.qti.hardware.display.mapper@2.0.vendor \
     vendor.qti.hardware.display.mapper@3.0.vendor \
     vendor.qti.hardware.display.mapper@4.0.vendor
+
+TARGET_DISABLE_MEMTRACK := true
 
 # DRM
 PRODUCT_PACKAGES += \
