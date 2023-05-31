@@ -13,6 +13,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.Handler;
 import androidx.preference.PreferenceManager;
 import android.provider.Settings;
 
@@ -22,6 +23,7 @@ import org.lineageos.settings.display.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.lang.Runnable;
 
 public class AutoHBMService extends Service {
     private static final String HBM = "/sys/class/drm/card0/card0-DSI-1/disp_param";
@@ -35,6 +37,9 @@ public class AutoHBMService extends Service {
 
     private SharedPreferences mSharedPrefs;
     private boolean dcDimmingEnabled;
+
+    private Handler mHandler;
+    private Runnable mDisableHbmRunnable;
 
     public void activateLightSensorRead() {
         submit(() -> {
@@ -67,7 +72,6 @@ public class AutoHBMService extends Service {
     }
 
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
-
         @Override
         public void onSensorChanged(SensorEvent event) {
             float lux = event.values[0];
@@ -82,20 +86,11 @@ public class AutoHBMService extends Service {
                     mAutoHBMActive = true;
                     enableHBM(true);
                 }
-            }
-            if (lux < threshold) {
+            } else {
                 if (mAutoHBMActive) {
-                    mExecutorService.submit(() -> {
-                        try {
-                            Thread.sleep(timeToDisableHBM * 1000);
-                        } catch (InterruptedException e) {
-                        }
-                        if (lux < threshold) {
-                            mAutoHBMActive = false;
-                            enableHBM(false);
-                        }
-                    });
-                }
+                	mHandler.removeCallbacks(mDisableHbmRunnable);
+                	mHandler.postDelayed(mDisableHbmRunnable, timeToDisableHBM * 1000);
+		}
             }
         }
 
@@ -119,6 +114,17 @@ public class AutoHBMService extends Service {
     @Override
     public void onCreate() {
         mExecutorService = Executors.newSingleThreadExecutor();
+        mHandler = new Handler();
+        mDisableHbmRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (lux < luxThreshold) {
+                    mAutoHBMActive = false;
+                    enableHBM(false);
+                }
+            }
+        };
+
         IntentFilter screenStateFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mScreenStateReceiver, screenStateFilter);
