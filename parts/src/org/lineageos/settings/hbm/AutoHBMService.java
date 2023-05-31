@@ -67,7 +67,6 @@ public class AutoHBMService extends Service {
     }
 
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
-        private long mLastTriggerTime = 0;
 
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -82,15 +81,20 @@ public class AutoHBMService extends Service {
                 if ((!mAutoHBMActive || !isCurrentlyEnabled()) && !keyguardShowing && !dcDimmingEnabled) {
                     mAutoHBMActive = true;
                     enableHBM(true);
-                    mLastTriggerTime = System.currentTimeMillis();
                 }
-            } else {
+            }
+            if (lux < threshold) {
                 if (mAutoHBMActive) {
-                    long currentTime = System.currentTimeMillis();
-                    if (currentTime - mLastTriggerTime >= timeToDisableHBM * 1000 && lux < luxThreshold) {
-                        mAutoHBMActive = false;
-                        enableHBM(false);
-                    }
+                    mExecutorService.submit(() -> {
+                        try {
+                            Thread.sleep(timeToDisableHBM * 1000);
+                        } catch (InterruptedException e) {
+                        }
+                        if (lux < threshold) {
+                            mAutoHBMActive = false;
+                            enableHBM(false);
+                        }
+                    });
                 }
             }
         }
