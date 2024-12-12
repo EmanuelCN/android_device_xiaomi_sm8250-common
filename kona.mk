@@ -5,6 +5,7 @@
 #
 
 # Setup dalvik vm configs
+sefrgefsdgjhesfidgjhes;rfdlgjherkslf;dgj
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 
 # Permissions
